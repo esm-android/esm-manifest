@@ -195,7 +195,7 @@ for (int i = 0; i < n; i++) {
 ```bash
 # 1. Initialize and sync (2-6 hours for download)
 mkdir ~/android/esm && cd ~/android/esm
-repo init -u https://github.com/dustinmcafee/esm-manifest.git
+repo init -u https://github.com/esm-android/manifest.git
 repo sync -c -j8
 
 # 2. Download proprietary binaries
@@ -268,7 +268,7 @@ mkdir -p ~/android/esm
 cd ~/android/esm
 
 # Initialize with ESM manifest (includes all ESM changes!)
-repo init -u https://github.com/dustinmcafee/esm-manifest.git
+repo init -u https://github.com/esm-android/manifest.git
 
 # Download source (~100 GB, 2-6 hours depending on connection)
 repo sync -c -j8 --force-sync --no-clone-bundle
@@ -539,14 +539,14 @@ This manifest pulls from the following ESM-modified repositories:
 
 | Repository | Description |
 |------------|-------------|
-| [esm-manifest](https://github.com/dustinmcafee/esm-manifest) | This manifest |
-| [aosp-bionic-esm](https://github.com/dustinmcafee/aosp-bionic-esm) | Bionic with ESM syscalls |
-| [aosp-build-esm](https://github.com/dustinmcafee/aosp-build-esm) | Build system integration |
-| [aosp-device-redfin-esm](https://github.com/dustinmcafee/aosp-device-redfin-esm) | Pixel 5 device config |
-| [aosp-frameworks-base-esm](https://github.com/dustinmcafee/aosp-frameworks-base-esm) | Framework with ESM watchdog |
-| [aosp-frameworks-native-esm](https://github.com/dustinmcafee/aosp-frameworks-native-esm) | InputFlinger ESM integration |
-| [aosp-libcore-esm](https://github.com/dustinmcafee/aosp-libcore-esm) | Java ESM constants |
-| [kernel-msm-esm](https://github.com/dustinmcafee/kernel-msm-esm) | Kernel with ESM implementation |
+| [manifest](https://github.com/esm-android/manifest) | This manifest |
+| [bionic](https://github.com/esm-android/bionic) | Bionic with ESM syscalls |
+| [build](https://github.com/esm-android/build) | Build system integration |
+| [device-redfin](https://github.com/esm-android/device-redfin) | Pixel 5 device config |
+| [frameworks-base](https://github.com/esm-android/frameworks-base) | Framework with ESM watchdog |
+| [frameworks-native](https://github.com/esm-android/frameworks-native) | InputFlinger ESM integration |
+| [libcore](https://github.com/esm-android/libcore) | Java ESM constants |
+| [kernel](https://github.com/esm-android/kernel) | Kernel with ESM implementation |
 
 All other AOSP components are pulled from the official Google repositories at `android-12.0.0_r3`.
 

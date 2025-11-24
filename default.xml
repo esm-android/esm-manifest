@@ -5,7 +5,7 @@
            fetch="https://android.googlesource.com"
            review="https://android-review.googlesource.com/" />
   <remote  name="esm-github"
-           fetch="https://github.com/dustinmcafee" />
+           fetch="https://github.com/esm-android" />
   <default revision="refs/tags/android-12.0.0_r3"
            remote="aosp"
            sync-j="4" />
@@ -13,7 +13,7 @@
   <superproject name="platform/superproject" remote="aosp" revision="android-12.0.0_r3" />
   <contactinfo bugurl="go/repo-bug" />
 
-  <project path="build/make" name="aosp-build-esm" remote="esm-github" revision="esm" groups="pdk" >
+  <project path="build/make" name="build" remote="esm-github" revision="esm" groups="pdk" >
     <copyfile src="core/root.mk" dest="Makefile" />
     <linkfile src="CleanSpec.mk" dest="build/CleanSpec.mk" />
     <linkfile src="buildspec.mk.default" dest="build/buildspec.mk.default" />
@@ -34,7 +34,7 @@
     <linkfile src="bootstrap.bash" dest="bootstrap.bash" />
   </project>
   <project path="art" name="platform/art" groups="pdk" />
-  <project path="bionic" name="aosp-bionic-esm" remote="esm-github" revision="esm" groups="pdk" />
+  <project path="bionic" name="bionic" remote="esm-github" revision="esm" groups="pdk" />
   <project path="bootable/recovery" name="platform/bootable/recovery" groups="pdk" />
   <project path="bootable/libbootloader" name="platform/bootable/libbootloader" groups="vts,pdk" />
   <project path="compatibility/cdd" name="platform/compatibility/cdd" groups="pdk" />
@@ -81,7 +81,7 @@
   <project path="device/google/redbull" name="device/google/redbull" groups="device,redbull" />
   <project path="device/google/redbull-kernel" name="device/google/redbull-kernel" groups="device,bramble,redfin" clone-depth="1" />
   <project path="device/google/redbull-sepolicy" name="device/google/redbull-sepolicy" groups="device,redbull" />
-  <project path="device/google/redfin" name="aosp-device-redfin-esm" remote="esm-github" revision="esm" groups="device,redfin" />
+  <project path="device/google/redfin" name="device-redfin" remote="esm-github" revision="esm" groups="device,redfin" />
   <project path="device/google/redfin-sepolicy" name="device/google/redfin-sepolicy" groups="device,redfin" />
   <project path="device/google/sunfish" name="device/google/sunfish" groups="device,sunfish" />
   <project path="device/google/sunfish-kernel" name="device/google/sunfish-kernel" groups="device,sunfish" clone-depth="1" />
@@ -670,7 +670,7 @@
   <project path="external/zstd" name="platform/external/zstd" groups="pdk" />
   <project path="external/zxing" name="platform/external/zxing" groups="pdk" />
   <project path="frameworks/av" name="platform/frameworks/av" groups="pdk" />
-  <project path="frameworks/base" name="aosp-frameworks-base-esm" remote="esm-github" revision="esm" groups="pdk-cw-fs,pdk-fs" />
+  <project path="frameworks/base" name="frameworks-base" remote="esm-github" revision="esm" groups="pdk-cw-fs,pdk-fs" />
   <project path="frameworks/compile/libbcc" name="platform/frameworks/compile/libbcc" groups="pdk" />
   <project path="frameworks/compile/mclinker" name="platform/frameworks/compile/mclinker" groups="pdk" />
   <project path="frameworks/compile/slang" name="platform/frameworks/compile/slang" groups="pdk" />
@@ -684,7 +684,7 @@
   <project path="frameworks/libs/service_entitlement" name="platform/frameworks/libs/service_entitlement" groups="pdk" />
   <project path="frameworks/minikin" name="platform/frameworks/minikin" groups="pdk-cw-fs,pdk-fs" />
   <project path="frameworks/multidex" name="platform/frameworks/multidex" groups="pdk-cw-fs,pdk-fs" />
-  <project path="frameworks/native" name="aosp-frameworks-native-esm" remote="esm-github" revision="esm" groups="pdk" />
+  <project path="frameworks/native" name="frameworks-native" remote="esm-github" revision="esm" groups="pdk" />
   <project path="frameworks/opt/bitmap" name="platform/frameworks/opt/bitmap" groups="pdk-fs" />
   <project path="frameworks/opt/calendar" name="platform/frameworks/opt/calendar" groups="pdk-cw-fs,pdk-fs" />
   <project path="frameworks/opt/car/services" name="platform/frameworks/opt/car/services" groups="pdk-fs" />
@@ -794,7 +794,7 @@
   <project path="kernel/prebuilts/common-modules/virtual-device/mainline/arm64" name="kernel/prebuilts/common-modules/virtual-device/mainline/arm64" groups="pdk" clone-depth="1" />
   <project path="kernel/prebuilts/common-modules/virtual-device/mainline/x86-64" name="kernel/prebuilts/common-modules/virtual-device/mainline/x86-64" groups="pdk" clone-depth="1" />
   <project path="kernel/tests" name="kernel/tests" groups="vts,pdk" />
-  <project path="libcore" name="aosp-libcore-esm" remote="esm-github" revision="esm" groups="pdk" />
+  <project path="libcore" name="libcore" remote="esm-github" revision="esm" groups="pdk" />
   <project path="libnativehelper" name="platform/libnativehelper" groups="pdk" />
   <project path="packages/apps/BasicSmsReceiver" name="platform/packages/apps/BasicSmsReceiver" groups="pdk-cw-fs,pdk-fs" />
   <project path="packages/apps/Bluetooth" name="platform/packages/apps/Bluetooth" groups="pdk-cw-fs,pdk-fs" />
@@ -1093,7 +1093,7 @@
   <project path="tools/trebuchet" name="platform/tools/trebuchet" groups="tools,cts,pdk,pdk-cw-fs,pdk-fs" />
 
   <!-- ESM kernel source -->
-  <project path="kernel_redbull_source" name="kernel-msm-esm" remote="esm-github" revision="esm" groups="device,redfin" />
+  <project path="kernel_redbull_source" name="kernel" remote="esm-github" revision="esm" groups="device,redfin" />
 
   <repo-hooks in-project="platform/tools/repohooks" enabled-list="pre-upload" />
 
