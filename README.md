@@ -56,27 +56,27 @@ A push-based event delivery mechanism for Android that replaces epoll-based inpu
 
 ## What is ESM?
 
-ESM (Event Stream Model) is a kernel-level innovation that fundamentally changes how Android handles input events. Instead of processes continuously polling for events (pull/polling model), the kernel actively pushes events to waiting processes (push model).
+ESM (Event Stream Model) is a kernel-level innovation that fundamentally changes how Android handles input events. Instead of the traditional epoll model where processes wake on timeout to check for events, the kernel actively pushes events directly to waiting processes.
 
-### The Problem with epoll (Polling Model)
+### The Problem with epoll
 
-Android's InputFlinger traditionally uses epoll to monitor input device file descriptors (`/dev/input/event*`). This polling approach requires:
+Android's InputFlinger traditionally uses epoll to monitor input device file descriptors (`/dev/input/event*`). This approach requires:
 
 ```
-1. Process calls epoll_wait() - "Are there any events?"
-2. Process blocks until event arrives
-3. Kernel wakes process when event ready
-4. Process calls read() to get the event data
+1. Process calls epoll_wait() with a timeout
+2. Process blocks until event arrives OR timeout expires
+3. Timeout expires frequently, waking process to check for events
+4. If events ready, process calls read() to get the event data
 5. Process handles event
 6. Repeat from step 1
 ```
 
 **Problems with this approach:**
+- **Frequent timeout wakeups**: Process wakes up repeatedly even when no events are ready
 - **Extra syscall overhead**: Separate `read()` required after each `epoll_wait()` notification
-- **Wakeup latency**: Process must be scheduled after each wakeup
 - **Context switch overhead**: Frequent transitions between kernel and user space
-- **Poor event batching**: Each event typically triggers a separate notification
-- **Higher CPU usage**: More syscalls = more CPU cycles wasted on overhead
+- **Poor event batching**: Each file descriptor handled separately
+- **Higher CPU usage**: More wakeups and syscalls = more CPU cycles wasted
 
 ### The ESM Solution (Push Model)
 
