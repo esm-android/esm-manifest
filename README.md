@@ -1,6 +1,6 @@
 # Event Stream Model (ESM) for Android 12
 
-A push-based event delivery mechanism for Android that replaces epoll-based input handling, providing 20-30% lower latency and improved power efficiency.
+A push-based event delivery mechanism for Android that replaces epoll-based input handling, designed to reduce latency, syscall overhead, and power consumption.
 
 **Support this project:**
 
@@ -138,13 +138,13 @@ for (int i = 0; i < n; i++) {
 }
 ```
 
-### Performance Comparison
+### Architectural Comparison
 
-| Metric | epoll | ESM | Improvement |
-|--------|-------|-----|-------------|
-| Syscalls per 100 events | 300 | 5 | **98% fewer** |
-| Context switches per wakeup | 2 | 1 | **50% fewer** |
-| Event batching | Poor | Excellent | **Much better** |
+| Metric | epoll | ESM |
+|--------|-------|-----|
+| Syscalls per event batch | epoll_wait + N × read() | Single esm_wait() |
+| Context switches per wakeup | 2 (notify + read) | 1 (events in buffer) |
+| Event batching | Per-fd notification | Cross-device batching |
 
 ### Architectural Benefits
 
@@ -155,29 +155,18 @@ for (int i = 0; i < n; i++) {
 
 ---
 
-## Performance
+## Expected Performance Improvements
 
-### Latency (Touchscreen to InputFlinger)
+ESM's push-based architecture is designed to improve performance in the following areas:
 
-| Scenario | epoll | ESM | Improvement |
-|----------|-------|-----|-------------|
-| Single tap | 2.3 ms | 1.8 ms | **21% faster** |
-| Scroll (50 events) | 15.7 ms | 11.2 ms | **29% faster** |
-| Fast swipe (100 events) | 32.4 ms | 22.1 ms | **32% faster** |
+| Metric | Expected Improvement | Rationale |
+|--------|---------------------|-----------|
+| Input latency | Lower | Direct event push eliminates extra read() syscall |
+| Syscall count | Significantly fewer | esm_wait() combines notification + data delivery |
+| CPU usage | Lower | Fewer context switches and syscalls |
+| Power consumption | Lower | Fewer wakeups enables deeper CPU sleep states |
 
-### CPU Usage (1 minute continuous interaction)
-
-| Process | epoll | ESM | Reduction |
-|---------|-------|-----|-----------|
-| system_server | 18.2% | 15.7% | **13.7% less** |
-| Total system | 42.6% | 39.1% | **8.2% less** |
-
-### Power Impact (30 minutes real-world usage)
-
-| Metric | epoll | ESM | Improvement |
-|--------|-------|-----|-------------|
-| Battery drain | 8.7% | 8.1% | **7% less drain** |
-| Wakeups/sec | 142 | 98 | **31% fewer wakeups** |
+A comprehensive [testing framework](https://github.com/esm-android/esm-testing) has been developed to empirically measure these improvements.
 
 ---
 
@@ -207,7 +196,8 @@ tar -xzf google_devices-redfin-*.tgz && tar -xzf qcom-redfin-*.tgz
 
 # 3. Build (1-4 hours)
 source build/envsetup.sh && lunch aosp_redfin-userdebug
-m -j$(nproc)
+export PRODUCT_KERNEL_VERSION=6.1
+./build.sh -j$(nproc)
 
 # 4. Flash
 adb reboot bootloader
@@ -307,8 +297,9 @@ source build/envsetup.sh
 # Select build target (Pixel 5, userdebug variant)
 lunch aosp_redfin-userdebug
 
-# Build everything (1-4 hours depending on hardware)
-m -j$(nproc)
+# Set kernel version and build everything including kernel (1-4 hours)
+export PRODUCT_KERNEL_VERSION=6.1
+./build.sh -j$(nproc)
 ```
 
 When successful, you'll see:
@@ -478,15 +469,17 @@ ESM requires changes across the Android stack:
 Bionic syscall headers not synced properly.
 ```bash
 repo sync bionic
-m -j$(nproc)
+export PRODUCT_KERNEL_VERSION=6.1
+./build.sh -j$(nproc)
 ```
 
 ### Kernel Doesn't Have ESM Symbols
 
 Wrong kernel was built/flashed.
 ```bash
-# Rebuild kernel module
-m bootimage
+# Rebuild kernel and boot image
+export PRODUCT_KERNEL_VERSION=6.1
+./build.sh -j$(nproc)
 adb reboot bootloader
 fastboot flash boot out/target/product/redfin/boot.img
 fastboot reboot
